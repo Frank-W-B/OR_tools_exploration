@@ -1,3 +1,5 @@
+# Create the data
+
 def create_data_model():
     """Stores the data for the problem."""
     data = {}
@@ -25,6 +27,8 @@ def create_data_model():
     data["depot"] = 0
     return data
 
+# Location coordinates
+
 def locations_reference():
     """The location index and x, y coordinates. Index 0 is the depot."""    
     location_dict = {
@@ -48,4 +52,61 @@ def locations_reference():
     }
     return location_dict
                     
+# Distance Callback
 
+def distance_callback(from_index, to_index):
+    """Returns the distance between two nodes."""
+    # Convert from routing variable Index to distance matrix NodeIndex.
+    from_node = manager.IndexToNode(from_index)
+    to_node = manager.IndexToNode(to_index)
+    return data["distance_matrix"][from_node][to_node]
+
+transit_callback_index = routing.RegisterTransitCallback(distance_callback)
+routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
+
+# Add a distance dimension
+# Create a distance dimension which is the cumulative distance traveled by 
+# each vehicle along its route.  Then set cost proportional to the maximum
+# of the total distances along each route.  Routing programes use dimensions
+# to keep track of quantities that accumulate oer a vehicle's route.
+
+
+dimension_name = "Distance"
+routing.AddDimension(
+    transit_callback_index,
+    0,  # no slack
+    3000,  # vehicle maximum travel distance 
+    True,  # start cumul to zero
+    dimension_name,
+)
+distance_dimension = routing.GetDimensionOrDie(dimension_name)
+#  The method SetGlobalSpanCostCoefficient sets a large coefficient or the global span
+#  of the routes, which in this example is the maximum distance of the routes
+#  This makes the global span the predominant factor in the objective function, so the
+#  program minimizes the length of the longest route. 
+distance_dimension.SetGlobalSpanCostCoefficient(100)  
+
+
+
+def print_solution(data, manager, routing, solution):
+    """Prints solution on console"""
+    print(f"Objective: {solution.ObjectiveValue()}")
+    max_route_distance = 0
+    for vehicle_id in range(data["num_vehicles"]):
+        if not routing.IsVehicleUsed(solution, vehicle_id):
+            continue
+        index = routing.Start(vehicle_id)
+        plan_output = f"Route for vehicle: {vehicle_id}:\n"
+        route_distance = 0
+        while not routing.IsEnd(index):
+            plan_output += f" {manager.IndexToNode(index) -> "
+            previous_index = index
+            index = solution.Value(routing.NextVar(index))
+            route_distance += routing.GetArcCostForVehicle(
+                previous_index, index, vehicle_id
+            )
+        plan_output += f"{manager.IndexToNode(index)}\n"
+        plan_output += f"Distance of the route: {route_distance}m\n"
+        print(plan_output)
+        max_route_distance = max(route_distance, max_route_distance)
+    print(f"Maximum of the route distances: {max_route_distance}m")
