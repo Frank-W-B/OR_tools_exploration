@@ -32,5 +32,5 @@ which python
 * Print the solution.
 
 `vrp_example.py`
-Similar to `traveling_salesman_example.py` but adds a Dimension associated with the max route length of one vehicle.  For 3 or more vehicles this seems non-optimal:  what is controlling the length of the cars that don't have the max length?
+Similar to `traveling_salesman_example.py` but more than one vehicle defined in create_data_model and adds a Dimension associated with the max route length of one vehicle.  For 3 or more vehicles this seems non-optimal:  what is controlling the length of the cars that don't have the max length?
 
