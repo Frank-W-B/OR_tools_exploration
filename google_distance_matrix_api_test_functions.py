@@ -70,7 +70,6 @@ def send_request(origin_addresses, dest_addresses, API_key):
                         dest_address_str + '&key=' + API_key
     print(f"\nRequest: {request}")
     jsonResult = urlopen(request).read()
-    breakpoint()
     response = json.loads(jsonResult)
     return response
 
@@ -81,9 +80,6 @@ def build_distance_matrix(response):
         row_list = [row['elements'][j]['distance']['value'] for j in range(len(row['elements']))]
         distance_matrix.append(row_list)
     return distance_matrix
-
-
-
 
 
 distance_matrix = create_distance_matrix(data)
