@@ -34,5 +34,7 @@ which python
 `vrp_example.py`
 Similar to `traveling_salesman_example.py` but more than one vehicle defined in create_data_model and adds a Dimension associated with the max route length of one vehicle.  For 3 or more vehicles this seems non-optimal:  what is controlling the length of the cars that don't have the max length?
 
-`google_distance_matrix_api_example`
+`google_distance_matrix_api test functions and program`
 The API is restricted to 100 pairs per request.  The example has 16 addresses that can all be origins and destinations (and it includes the depot).  That's 16x16=256 origin-destination pairs.  So multiple requests are required.
+
+API restricted to my IP address (which causes problems sometimes.)   Program and API is working.
