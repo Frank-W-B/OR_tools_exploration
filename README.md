@@ -38,3 +38,8 @@ Similar to `traveling_salesman_example.py` but more than one vehicle defined in 
 The API is restricted to 100 pairs per request.  The example has 16 addresses that can all be origins and destinations (and it includes the depot).  That's 16x16=256 origin-destination pairs.  So multiple requests are required.
 
 API restricted to my IP address (which causes problems sometimes.)   Program and API is working.
+
+`cvrp walkthrough and program`
+Extends the VRP problem with demand to be picked up at each location and then delivered to depot at the end.  Each vehicle has a maximum capacity of 15.
+
+The problem is to find an assignment of routes to vehicles that has the shortest total distance, and such that the total amount a vehicle is carrying never exceeds its capacity.
